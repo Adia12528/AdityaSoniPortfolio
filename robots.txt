@@ -1,0 +1,34 @@
+# robots.txt for Aditya Soni Portfolio
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow access to specific files/folders (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /node_modules/
+
+# Sitemap location
+Sitemap: https://adityasoni.dev/sitemap.xml
+
+# Crawl delay (optional - use if server has rate limiting)
+# Crawl-delay: 10
+
+# Specific rules for different bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots (optional)
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

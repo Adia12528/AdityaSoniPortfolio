@@ -207,32 +207,202 @@ function animateMetricCounter(metricCard) {
 
 // --- 3. Contact Form Submission (Simulated) ---
 
+// =====================================================
+// CONTACT FORM WITH EMAILJS & TOAST NOTIFICATION
+// =====================================================
+
+// Initialize EmailJS with your Public Key
+// Get your keys from: https://www.emailjs.com/
+emailjs.init('SeRx5dxeG_ogKMtv2'); // Replace with your EmailJS public key
+
 const contactForm = document.getElementById('contact-form');
-const formStatus = document.getElementById('form-status');
+const submitBtn = document.getElementById('submit-btn');
+const btnText = document.getElementById('btn-text');
+const btnLoader = document.getElementById('btn-loader');
+
+// Toast notification function
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastContent = document.getElementById('toast-content');
+    const toastIcon = document.getElementById('toast-icon');
+    const toastMessage = document.getElementById('toast-message');
+    
+    // Set message
+    toastMessage.textContent = message;
+    
+    // Set icon and colors based on type
+    if (type === 'success') {
+        toastContent.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%)';
+        toastContent.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+        toastMessage.className = 'text-sm font-semibold whitespace-nowrap text-white';
+        toastIcon.innerHTML = `
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+        `;
+    } else if (type === 'error') {
+        toastContent.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%)';
+        toastContent.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+        toastMessage.className = 'text-sm font-semibold whitespace-nowrap text-white';
+        toastIcon.innerHTML = `
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        `;
+    } else if (type === 'info') {
+        toastContent.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%)';
+        toastContent.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+        toastMessage.className = 'text-sm font-semibold whitespace-nowrap text-white';
+        toastIcon.innerHTML = `
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        `;
+    } else if (type === 'warning') {
+        toastContent.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.95) 0%, rgba(217, 119, 6, 0.95) 100%)';
+        toastContent.style.borderColor = 'rgba(245, 158, 11, 0.5)';
+        toastMessage.className = 'text-sm font-semibold whitespace-nowrap text-white';
+        toastIcon.innerHTML = `
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        `;
+    }
+    
+    // Show toast with animation
+    toast.classList.add('show');
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
 
 contactForm.addEventListener('submit', function(event) {
     event.preventDefault();
     
-    // Simulate a successful API call delay
-    formStatus.classList.remove('hidden', 'text-red-500', 'text-green-500');
-    formStatus.classList.add('text-gray-500', 'animate-pulse');
-    formStatus.textContent = 'Sending message...';
+    // Disable submit button and show loader
+    submitBtn.disabled = true;
+    btnText.textContent = 'Sending...';
+    btnLoader.classList.remove('hidden');
+    
+    // Get form data
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value,
+        to_email: 'adityasoniworkmail@gmail.com' // Your email
+    };
+    
+    // Send email using EmailJS
+    // Service ID, Template ID, and form data
+    emailjs.send('service_4l9pqpb', 'template_8u2ivjb', formData)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            
+            // Show success toast
+            showToast('Email sent successfully! 🎉', 'success');
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            btnText.textContent = 'Send message';
+            btnLoader.classList.add('hidden');
+        }, function(error) {
+            console.log('FAILED...', error);
+            
+            // Show error toast
+            showToast('Failed to send email. Please try again.', 'error');
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            btnText.textContent = 'Send message';
+            btnLoader.classList.add('hidden');
+        });
+});
 
-    setTimeout(() => {
-        // Successful submission simulation
-        formStatus.classList.remove('text-gray-500', 'animate-pulse');
-        formStatus.classList.add('text-green-500');
-        formStatus.textContent = 'Message sent successfully! Thank you for reaching out.';
-        
-        // Clear the form fields
-        contactForm.reset();
-        
-        // Hide status after a few seconds
-        setTimeout(() => {
-            formStatus.classList.add('hidden');
-        }, 5000);
 
-    }, 1500); // 1.5 second delay
+// =====================================================
+// EXTERNAL LINK TOAST NOTIFICATIONS
+// =====================================================
+
+// Add toast notifications for all external links
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // GitHub links
+    const githubLinks = document.querySelectorAll('a[href*="github.com"]');
+    githubLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening GitHub profile...', 'info');
+        });
+    });
+    
+    // LinkedIn links
+    const linkedinLinks = document.querySelectorAll('a[href*="linkedin.com"]');
+    linkedinLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening LinkedIn profile...', 'info');
+        });
+    });
+    
+    // Twitter/X links
+    const twitterLinks = document.querySelectorAll('a[href*="twitter.com"], a[href*="x.com"]');
+    twitterLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening X (Twitter) profile...', 'info');
+        });
+    });
+    
+    // LeetCode links
+    const leetcodeLinks = document.querySelectorAll('a[href*="leetcode.com"]');
+    leetcodeLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening LeetCode profile...', 'info');
+        });
+    });
+    
+    // Calendly/Meeting links
+    const calendlyLinks = document.querySelectorAll('a[href*="calendly.com"]');
+    calendlyLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening meeting scheduler...', 'success');
+        });
+    });
+    
+    // Resume/CV download links
+    const resumeLinks = document.querySelectorAll('a[href*="resume"], a[href*="cv"], a[download]');
+    resumeLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Downloading resume... 📄', 'success');
+        });
+    });
+    
+    // Email links - Copy to clipboard
+    const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+    emailLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = this.getAttribute('href').replace('mailto:', '');
+            // Copy email to clipboard
+            navigator.clipboard.writeText(email).then(() => {
+                showToast('Email copied to clipboard! 📧', 'success');
+            }).catch(() => {
+                showToast('Opening email client...', 'info');
+                window.location.href = this.getAttribute('href');
+            });
+        });
+    });
+    
+    // Project circle links (Live Demo)
+    const projectLinks = document.querySelectorAll('.project-circle');
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            showToast('Opening live project...', 'info');
+        });
+    });
+    
 });
 
 

@@ -332,6 +332,89 @@ p {
     border-radius: 2px;
 }
 
+/* -----------------------------------------------------
+   Global Heading Underlines (consistent visual rhythm)
+   ----------------------------------------------------- */
+/* Centered underlines for hero and key section subheads */
+#hero h1,
+#hero h2,
+#about h3.text-2xl {
+    position: relative;
+    padding-bottom: 12px;
+}
+
+#hero h1::after,
+#hero h2::after,
+#about h3.text-2xl::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 80px;
+    height: 3px;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    opacity: 0.95;
+}
+
+.dark #hero h1::after,
+.dark #hero h2::after,
+.dark #about h3.text-2xl::after {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #22d3ee);
+}
+
+/* Left-aligned underlines for cards, features, skills, timeline */
+.feature-title,
+.skill-category-title,
+.content-card h3,
+.journey-title {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.feature-title::after,
+.skill-category-title::after,
+.content-card h3::after,
+.journey-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    opacity: 0.9;
+}
+
+.dark .feature-title::after,
+.dark .skill-category-title::after,
+.dark .content-card h3::after,
+.dark .journey-title::after {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #22d3ee);
+}
+
+/* Avoid underline on compact circle titles inside overlays */
+.circle-title::after { display: none !important; }
+
+/* -----------------------------------------------------
+   About Section Paragraph Borders
+   ----------------------------------------------------- */
+#about .max-w-4xl.mx-auto.text-lg p {
+    border: 1px solid rgba(8, 145, 178, 0.25);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 1px 3px rgba(2, 6, 23, 0.04);
+}
+
+.dark #about .max-w-4xl.mx-auto.text-lg p {
+    border-color: rgba(167, 139, 250, 0.35);
+    background: rgba(2, 6, 23, 0.2);
+    box-shadow: 0 1px 4px rgba(2, 6, 23, 0.25);
+}
+
 /* Animations */
 @keyframes fade-in-up {
     0% { opacity: 0; transform: translateY(30px); }

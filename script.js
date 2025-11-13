@@ -406,6 +406,74 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// =====================================================
+// MOBILE PARALLAX TILT FOR PROJECT CIRCLES
+// =====================================================
+(function initMobileParallaxTilt() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouchCoarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const isSmallScreen = window.innerWidth <= 768;
+    if (reduceMotion || !isTouchCoarse || !isSmallScreen) return;
+
+    const circles = document.querySelectorAll('.project-circle');
+    if (!circles.length) return;
+
+    const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
+    const raf = (fn) => {
+        let id = null;
+        return (...args) => {
+            if (id !== null) return;
+            id = requestAnimationFrame(() => {
+                fn(...args);
+                id = null;
+            });
+        };
+    };
+
+    circles.forEach((circle) => {
+        const image = circle.querySelector('.circle-image');
+        if (!image) return;
+
+        let active = false;
+
+        const tiltMax = window.innerWidth <= 480 ? 10 : 12; // degrees
+
+        const applyTilt = raf((clientX, clientY) => {
+            const rect = circle.getBoundingClientRect();
+            const x = clamp((clientX - rect.left) / rect.width, 0, 1);
+            const y = clamp((clientY - rect.top) / rect.height, 0, 1);
+            const rX = (0.5 - y) * tiltMax; // invert for natural tilt
+            const rY = (x - 0.5) * tiltMax;
+
+            // Apply transform to image only to avoid clobbering container animations
+            image.style.willChange = 'transform';
+            image.style.transform = `perspective(700px) rotateX(${rX}deg) rotateY(${rY}deg) scale(1.03)`;
+        });
+
+        const reset = () => {
+            active = false;
+            image.style.transform = '';
+            image.style.willChange = '';
+        };
+
+        circle.addEventListener('pointerdown', (e) => {
+            active = true;
+            // First update immediately for snappy feel
+            applyTilt(e.clientX, e.clientY);
+        }, { passive: true });
+
+        circle.addEventListener('pointermove', (e) => {
+            if (!active) return;
+            applyTilt(e.clientX, e.clientY);
+        }, { passive: true });
+
+        circle.addEventListener('pointerup', reset, { passive: true });
+        circle.addEventListener('pointerleave', reset, { passive: true });
+        circle.addEventListener('pointercancel', reset, { passive: true });
+    });
+})();
+
+
 // --- 4. Desktop Dark Mode Toggle ---
 toggleButton?.addEventListener('click', toggleTheme);
 

@@ -2508,45 +2508,91 @@ button[type="submit"]:hover::before {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .projects-showcase {
-        height: 170px;
-        gap: 1.2rem;
+        height: 220px;
+        gap: 1.25rem;
         margin-bottom: 3rem;
-        padding: 1.5rem 0.5rem;
+        padding: 1rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
+
+    /* Hide scrollbars for a cleaner, app-like feel */
+    .projects-showcase::-webkit-scrollbar { display: none; }
+    .projects-showcase { -ms-overflow-style: none; scrollbar-width: none; }
     
     .project-circle {
-        width: 130px;
-        height: 130px;
+        width: 150px;
+        height: 150px;
+        flex: 0 0 auto;
+        scroll-snap-align: center;
+        transform: translateZ(0);
+        animation: float-circle 8s ease-in-out infinite;
+    }
+
+    /* Futuristic neon ring always visible on mobile */
+    .project-circle::before {
+        opacity: 0.7;
+        animation-duration: 6s;
+    }
+
+    /* Overlay becomes a bottom band for readability */
+    .circle-overlay {
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 0.75rem;
+        background: linear-gradient(to top,
+            rgba(59, 130, 246, 0.97) 0%,
+            rgba(139, 92, 246, 0.92) 55%,
+            rgba(6, 182, 212, 0.0) 88%);
+        border-radius: 50%;
+    }
+    .dark .circle-overlay {
+        background: linear-gradient(to top,
+            rgba(96, 165, 250, 0.97) 0%,
+            rgba(167, 139, 250, 0.92) 55%,
+            rgba(34, 211, 238, 0.0) 88%);
+    }
+
+    .circle-content {
+        transform: translateY(0) scale(1);
+        padding: 0.9rem 1rem;
     }
     
     .circle-title {
-        font-size: 1rem;
-        margin-bottom: 0.3rem;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+        opacity: 1;
+        transform: none;
     }
     
     .circle-tech {
-        font-size: 0.7rem;
-        margin-bottom: 0.6rem;
+        font-size: 0.72rem;
+        margin-bottom: 0.4rem;
+        opacity: 0.95;
+        transform: none;
+        letter-spacing: 0.09em;
     }
     
     .circle-icon {
         width: 2rem;
         height: 2rem;
+        opacity: 0.95;
+        transform: none;
     }
     
     .project-circle:hover,
     .project-circle:active {
-        transform: translateY(-12px) scale(1.1);
+        transform: translateY(-6px) scale(1.05);
     }
     
     /* Simplified animations for mobile performance */
     @keyframes float-circle {
-        0%, 100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-15px);
-        }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
     }
 }
 
@@ -2592,32 +2638,43 @@ button[type="submit"]:hover::before {
 /* Very Small Devices */
 @media (max-width: 480px) {
     .projects-showcase {
-        height: 140px;
-        gap: 0.8rem;
-        padding: 1rem 0;
+        height: 180px;
+        gap: 1rem;
+        padding: 0.75rem 0.75rem;
     }
     
     .project-circle {
-        width: 95px;
-        height: 95px;
+        width: 110px;
+        height: 110px;
     }
     
     .circle-title {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
     }
     
     .circle-tech {
-        font-size: 0.55rem;
-        margin-bottom: 0.4rem;
+        font-size: 0.6rem;
+        margin-bottom: 0.35rem;
     }
     
     .circle-content {
-        padding: 0.5rem;
+        padding: 0.6rem;
     }
     
     .circle-icon {
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+}
+
+/* Large phones phablets: slightly larger circles */
+@media (min-width: 540px) and (max-width: 768px) {
+    .projects-showcase {
+        height: 240px;
+    }
+    .project-circle {
+        width: 165px;
+        height: 165px;
     }
 }
 
